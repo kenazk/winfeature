@@ -29,11 +29,11 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
             provider  => powershell,
         }
             
-        notify {'winfeature-add-msg':
+        notify {"winfeature-add-msg-${feature_name}":
             message => "Invoking Add-WindowsFeature: ${cmd}",
         }
             
-        notify['winfeature-add-msg'] -> exec["winfeature-install-feature-${feature_name}"]
+        notify["winfeature-add-msg-${feature_name}"] -> exec["winfeature-install-feature-${feature_name}"]
     }
     elsif $ensure == 'absent'{
         $cmd = "Import-Module ServerManager; Remove-WindowsFeature ${feature_name} ${strrestart} ${strwhatif} ${strlogfile} ${strconcurrent}"
@@ -44,10 +44,10 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
             provider  => powershell,
            }
         
-        notify {'winfeature-remove-msg':
+        notify {"winfeature-remove-msg-${feature_name}":
             message => "Invoking Remove-WindowsFeature: ${cmd}",
         }
             
-        notify['winfeature-remove-msg'] -> exec["winfeature-remove-feature-${feature_name}"]
+        notify["winfeature-remove-msg-${feature_name}"] -> exec["winfeature-remove-feature-${feature_name}"]
     }
 }
