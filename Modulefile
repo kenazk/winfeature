@@ -1,5 +1,5 @@
 name 'admin36-winfeature'
-version '0.0.2'
+version '0.0.3'
 dependency 'joshcooper/powershell', '>=0.0.5'
 summary "Installs and Removes Windows Features"
 description "This puppet module creates a new defined type 'winfeature'. This can be called within any
