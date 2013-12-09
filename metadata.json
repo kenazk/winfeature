@@ -6,7 +6,7 @@
 
   ],
   "description": "This puppet module creates a new defined type 'winfeature'. This can be called within any\nclass to install/remove windows features based on their ID string ex: 'Web-Server' or a \ncomma seperated list of feature IDs ex: 'Telnet-Client,Telnet-Server' \n\nThe functionality is simply a wrapper to the powershell cmdlets 'Add-WindowsFeature' and 'Remove-WindowsFeature'.\nAll cmdlet parameters are supported by this module. For details about how the above cmdlets operates, please see the \nfollowing microsoft KB Article: http://technet.microsoft.com/en-us/library/cc732263.aspx#BKMK_powershell\n\nInspired from puppet module: https://forge.puppetlabs.com/opentable/windows_feature",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "summary": "Installs and Removes Windows Features",
   "name": "admin36-winfeature",
   "author": "Regan Laitila",
