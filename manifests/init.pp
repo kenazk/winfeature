@@ -18,21 +18,21 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
     if $whatif == true { $strwhatif = '-whatif' } else { $strwhatif = '' }
     if $logpath != '' { $strlogfile = "-logPath \"${logpath}\"" } else { $strlogfile = "" }
     if $concurrent == true { $strconcurrent = '-concurrent' } else { $strconcurrent = '' }
-    
+
     if $ensure == 'present'{
-        $cmd = "Import-Module ServerManager; Add-WindowsFeature ${feature_name} ${strallsubfeatures} ${strrestart} ${strwhatif} ${strlogfile} ${strconcurrent}"
-        
+        $cmd = "Import-Module ServerManager; Install-WindowsFeature ${feature_name} ${strallsubfeatures} ${strrestart} ${strwhatif} ${strlogfile} ${strconcurrent}"
+
         exec { "winfeature-install-feature-${feature_name}" :
             command   => $cmd,
             onlyif    => "Import-Module ServerManager; if((Get-WindowsFeature ${feature_name}).Installed) { exit 1 }",
             logoutput => true,
             provider  => powershell,
         }
-            
+
         notify {"winfeature-add-msg-${feature_name}":
-            message => "Invoking Add-WindowsFeature: ${cmd}",
+            message => "Invoking Install-WindowsFeature: ${cmd}",
         }
-            
+
         Notify["winfeature-add-msg-${feature_name}"] -> Exec["winfeature-install-feature-${feature_name}"]
     }
     elsif $ensure == 'absent'{
@@ -43,11 +43,11 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
             logoutput => true,
             provider  => powershell,
            }
-        
+
         notify {"winfeature-remove-msg-${feature_name}":
             message => "Invoking Remove-WindowsFeature: ${cmd}",
         }
-            
+
         Notify["winfeature-remove-msg-${feature_name}"] -> Exec["winfeature-remove-feature-${feature_name}"]
     }
 }
