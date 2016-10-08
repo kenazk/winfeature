@@ -12,15 +12,14 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
-define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $restart = false, $logpath = '', $whatif = false, $concurrent = false) {
+define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $restart = false, $logpath = '', $whatif = false) {
     if $allsubfeatures == true { $strallsubfeatures = '-IncludeAllSubFeature' } else { $strallsubfeatures = '' }
     if $restart == true { $strrestart = '-restart' } else { $strrestart = '' }
     if $whatif == true { $strwhatif = '-whatif' } else { $strwhatif = '' }
     if $logpath != '' { $strlogfile = "-logPath \"${logpath}\"" } else { $strlogfile = "" }
-    if $concurrent == true { $strconcurrent = '-concurrent' } else { $strconcurrent = '' }
 
     if $ensure == 'present'{
-        $cmd = "Import-Module ServerManager; Install-WindowsFeature ${feature_name} ${strallsubfeatures} ${strrestart} ${strwhatif} ${strlogfile} ${strconcurrent}"
+        $cmd = "Import-Module ServerManager; Install-WindowsFeature ${feature_name} ${strallsubfeatures} ${strrestart} ${strwhatif} ${strlogfile}"
 
         exec { "winfeature-install-feature-${feature_name}" :
             command   => $cmd,
@@ -36,7 +35,7 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
         Notify["winfeature-add-msg-${feature_name}"] -> Exec["winfeature-install-feature-${feature_name}"]
     }
     elsif $ensure == 'absent'{
-        $cmd = "Import-Module ServerManager; Remove-WindowsFeature ${feature_name} ${strrestart} ${strwhatif} ${strlogfile} ${strconcurrent}"
+        $cmd = "Import-Module ServerManager; Remove-WindowsFeature ${feature_name} ${strrestart} ${strwhatif} ${strlogfile}"
         exec { "winfeature-remove-feature-${feature_name}" :
             command   => $cmd,
             onlyif    => "Import-Module ServerManager; if((Get-WindowsFeature ${feature_name}).Installed) { exit 0 }",
