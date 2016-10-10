@@ -29,7 +29,8 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
         }
 
         notify {"winfeature-add-msg-${feature_name}":
-            message => "Invoking Install-WindowsFeature: ${cmd}",
+            message   => "Invoking Install-WindowsFeature: ${cmd}",
+            loglevel  => debug,
         }
 
         Exec["winfeature-install-feature-${feature_name}"] -> Notify["winfeature-add-msg-${feature_name}"]
@@ -44,9 +45,10 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
            }
 
         notify {"winfeature-remove-msg-${feature_name}":
-            message => "Invoking Remove-WindowsFeature: ${cmd}",
+            message   => "Invoking Remove-WindowsFeature: ${cmd}",
+            loglevel  => debug,
         }
 
-        Exec["winfeature-remove-feature-${feature_name}"] -> Notify["winfeature-remove-msg-${feature_name}"] 
+        Exec["winfeature-remove-feature-${feature_name}"] -> Notify["winfeature-remove-msg-${feature_name}"]
     }
 }
