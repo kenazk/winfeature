@@ -23,7 +23,7 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
 
         exec { "winfeature-install-feature-${feature_name}" :
             command   => $cmd,
-            onlyif    => "Import-Module ServerManager; if((Get-WindowsFeature ${feature_name}).Installed) { exit 1 }",
+            onlyif    => "Import-Module ServerManager; if(!(Get-WindowsFeature ${feature_name}).Installed) { exit 1 }",
             logoutput => true,
             provider  => powershell,
         }
