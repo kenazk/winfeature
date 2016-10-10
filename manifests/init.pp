@@ -23,7 +23,7 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
 
         exec { "winfeature-install-feature-${feature_name}" :
             command   => $cmd,
-            onlyif    => "Import-Module ServerManager; if(!(Get-WindowsFeature ${feature_name}).Installed) { exit 1 }",
+            onlyif    => "Import-Module ServerManager; if((Get-WindowsFeature ${feature_name}).Installed) { exit 1 }",
             logoutput => true,
             provider  => powershell,
         }
@@ -32,7 +32,7 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
             message => "Invoking Install-WindowsFeature: ${cmd}",
         }
 
-        Notify["winfeature-add-msg-${feature_name}"] -> Exec["winfeature-install-feature-${feature_name}"]
+        Exec["winfeature-install-feature-${feature_name}"] -> Notify["winfeature-add-msg-${feature_name}"]
     }
     elsif $ensure == 'absent'{
         $cmd = "Import-Module ServerManager; Remove-WindowsFeature ${feature_name} ${strrestart} ${strwhatif} ${strlogfile}"
@@ -47,6 +47,6 @@ define winfeature($feature_name = $title, $ensure, $allsubfeatures = false, $res
             message => "Invoking Remove-WindowsFeature: ${cmd}",
         }
 
-        Notify["winfeature-remove-msg-${feature_name}"] -> Exec["winfeature-remove-feature-${feature_name}"]
+        Exec["winfeature-remove-feature-${feature_name}"] -> Notify["winfeature-remove-msg-${feature_name}"] 
     }
 }
